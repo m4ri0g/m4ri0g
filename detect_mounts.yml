@@ -1,0 +1,16 @@
+---
+- hosts: all
+  vars:
+    required_mounts:
+      - /prom/data
+      - /prom/logs
+
+  tasks:
+    - name: debug mountpoint
+      set_fact:
+        mount_points: "{{ ansible_mounts|json_query('[].mount') }}"
+
+    - name: check fs
+      fail:
+        msg: 'mount point not found'
+      when: required_mounts not in mount_points
