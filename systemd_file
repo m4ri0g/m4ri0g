@@ -1,0 +1,15 @@
+[Unit]
+Description=Prometheus Server
+Documentation=https://prometheus.io/docs/introduction/overview/
+After=network-online.target
+
+[Service]
+User=prommgr
+Group=secapm
+Restart=on-failure
+ExecStartPre=/usr/bin/python2 anon_yml.py
+ExecStart=/bin/sh -c "/prom/appl/prometheus/prometheus --config.file=prometheus.yml --storage.tsdb.path=/prom/data --web.listen-address=127.0.0.1:9090  --storage.tsdb.retention.time=1825d &>>/prom/logs/prometheus.log "
+ExecStartStop=/usr/bin/python2 /prom/config/anon_yml.py --delete
+
+[Install]
+WantedBy=multi-user.target
